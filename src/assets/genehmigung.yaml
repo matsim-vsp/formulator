@@ -1,0 +1,22 @@
+title: Antrag auf Genehmigung einer Dienstreise
+image: genehmigung.png
+
+"0: An wen":
+  "An die Fakultätsverwaltung": { default: true, x: 12.5, y: 32.5}
+  "An die*den Präsident*in": { default: false, x: 12.5, y: 36.5}
+
+"I: Persönliche Angaben":
+  "Name, Vorname":        { x: 42, y: 55 }
+  "Personalnummer":       { x: 70, y: 62.5 }
+  "Fakultät / Abt.":      { x: 37, y: 68, default: 'V' }
+  "Telefon":              { x: 65, y: 68.5 }
+  "Sekr":                 { x: 24, y: 74.5, default: 'KAI 4-1'}
+  "E-mail":               { x: 53, y: 74.5 }
+  "Privatanschrift":      { x: 57, y: 82 }
+  "Ich bin an der TU befristet": { x: 43, y: 88, default: false }
+  "Befristet bis zum":    { x: 43, y: 91.5 }
+  "Ich bin an der TU unbefristet": { x: 74.2, y: 88, default: false }
+
+"II: Angaben zum Reiseverlauf":
+  "Reisedauer vom":       { x: 42, y: 55 }
+

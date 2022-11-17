@@ -58,7 +58,7 @@ export default {
     },
     async buildPDF() {
 
-      const byteData = this.ctx.canvas.toDataURL("image/jpeg", 0.85);
+      const byteData = this.ctx.canvas.toDataURL("image/jpeg", 0.9);
 
       const pdfDoc = await PDFDocument.create()
       const page = pdfDoc.addPage(PageSizes.A4)

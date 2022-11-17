@@ -1,6 +1,7 @@
 <script lang="ts">
 import YAML from 'yaml'
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+import { PDFDocument, PageSizes, StandardFonts, rgb } from 'pdf-lib'
+import Vue from 'vue'
 
 import config from '@/assets/genehmigung.yaml?raw'
 import pngImage from '@/assets/genehmigung.png'
@@ -14,10 +15,11 @@ export default {
   components: {},
   data() {
     return {
-    formConfig: {} as any,
-    answers: {} as any,
-    ctx: null as any,
-    dimensions: [0,0]
+      formConfig: {} as any,
+      answers: {} as any,
+      ctx: null as any,
+      dimensions: [0,0],
+      cleanImage: null as any
     }
   },
   props: {  },
@@ -25,8 +27,18 @@ export default {
     this.formConfig = await YAML.parse(config);
     console.log(this.formConfig)
 
-    this.insertImage()
 
+    this.setInitialValues()
+    this.insertImage()
+    this.updateForm()
+
+  },
+  watch: {
+    answers: {
+      handler(newAnswers, oldAnswers) {
+      this.updateForm()
+      }, deep: true
+    }
   },
   computed: {
     sections() {
@@ -35,116 +47,192 @@ export default {
     }
   },
   methods: {
-  async buildPDF() {
-
-    // Create a new PDFDocument
-    const pdfDoc = await PDFDocument.create()
-
-    // Embed the Times Roman font
-    const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman)
-
-    // Add a blank page to the document
-    const page = pdfDoc.addPage()
-
-    // Get the width and height of the page
-    const { width, height } = page.getSize()
-
-    // Draw a string of text toward the top of the page
-    const fontSize = 30
-    page.drawText('Creating PDFs in JavaScript is awesome!', {
-      x: 50,
-      y: height - 4 * fontSize,
-      size: fontSize,
-      font: timesRomanFont,
-      color: rgb(0, 0.53, 0.71),
-    })
-
-    // Serialize the PDFDocument to bytes (a Uint8Array)
-    const pdfBytes = await pdfDoc.save()
-
-  },
-  gxo(event: any) {
-    this.ctx.font=`bold ${ 15*PIXELRATIO }px Arial`
-    this.ctx.fillStyle='#008'
-
-    // fill the whole form with fake data for alignment
-    if (location.search.indexOf('test') > -1) {
-      let i = 1
+    setInitialValues() {
+      const answers = {} as any
       for (const section of this.sections) {
-        for (const [key, entry] of Object.entries(this.formConfig[section])) {
-          this.answers[key] = '' + i
-          i++
+        for (const key in this.formConfig[section]) {
+          this.answers[key] = this.formConfig[section][key].default || ''
         }
       }
-    }
+      console.log({answers})
+    },
+    async buildPDF() {
 
-    // console.log({dimensions: this.dimensions, answers: this.answers})
-    for (const [key,value] of Object.entries(this.answers)) {
-      for (const section of this.sections) {
-        if (this.formConfig[section][key]) {
-          const element = this.formConfig[section][key]
-          console.log(element)
-          const x = element.x * this.dimensions[0] / 210.0
-          const y = element.y * this.dimensions[1] / 297.0
-          this.ctx.fillText(value == true ? 'X': value, x,y)
+      const byteData = this.ctx.canvas.toDataURL("image/jpeg", 0.85);
 
+      const pdfDoc = await PDFDocument.create()
+      const page = pdfDoc.addPage(PageSizes.A4)
+
+      const pngImage = await pdfDoc.embedJpg(byteData)
+
+      page.drawImage(pngImage, {
+        x:0, y:0, width:page.getWidth(), height: page.getHeight()
+      })
+
+      // Serialize the PDFDocument to bytes (a Uint8Array)
+      const pdfBytes = await pdfDoc.save()
+
+      const blobURL = URL.createObjectURL(
+        new Blob([pdfBytes], { type: 'application/pdf' })
+      )
+
+      let element = document.createElement('a')
+      element.setAttribute('href', blobURL)
+      element.setAttribute('download', 'form.pdf')
+      element.style.display = 'none'
+
+      document.body.appendChild(element)
+      element.click()
+      document.body.removeChild(element)
+
+    },
+    updateForm() {
+      if (!this.ctx) return
+
+      this.redrawImage()
+
+      this.ctx.font=`bold ${ 15 * PIXELRATIO }px Arial`
+      this.ctx.fillStyle='#008'
+
+      // fill the whole form with fake data for alignment
+      if (location.search.indexOf('test') > -1) {
+        let i = 1
+        for (const section of this.sections) {
+          for (const [key, entry] of Object.entries(this.formConfig[section])) {
+            this.answers[key] = '' + i
+            i++
+          }
         }
       }
-    }
 
-  },
+      for (const [key,value] of Object.entries(this.answers)) {
+        for (const section of this.sections) {
+          if (this.formConfig[section][key]) {
+            const element = this.formConfig[section][key]
+            const x = element.x * this.dimensions[0] / 210.0
+            const y = element.y * this.dimensions[1] / 297.0
+
+            // checkbox
+            if (typeof(value) == 'boolean') {
+              if (value) this.ctx.fillText('X', x,y)
+            } else {
+              const lines = (value as string).split('\n')
+              lines.forEach((line,i) => {
+                this.ctx.fillText(line, x,y + i*3*this.dimensions[1] / 297.0)
+              })
+            }
+          }
+        }
+      }
+    },
   insertImage() {
     let canvas = document.getElementById('png-image') as HTMLCanvasElement
-    // canvas.height=2970
-    // canvas.width=2100
     let image = new Image()
     image.onload = () => {
-      this.ctx = canvas?.getContext('2d')
+      this.cleanImage = image
+      this.ctx = canvas.getContext('2d')
       canvas.width = image.width * PIXELRATIO
       canvas.height = image.height * PIXELRATIO
       this.dimensions = [canvas.width, canvas.height]
-      this.ctx.drawImage(image,0,0,canvas.width,canvas.height)
+      // this.ctx.drawImage(image,0,0,canvas.width,canvas.height)
+      this.updateForm()
     }
     image.src = pngImage
+  },
+  redrawImage() {
+    // if (!this.ctx) return
+    this.ctx.drawImage(this.cleanImage,0,0,this.ctx.canvas.width,this.ctx.canvas.height)
+
   }
 }
 }
 </script>
 
 <template lang="pug">
-h1.center {{ formConfig.title }}
-hr
-.panels
+.main-app
+  .top-panel
+    h1.center {{ formConfig.title }}
+
   .leftpanel
     .xsection(v-for="section in sections")
-      h2 {{ section }}
+      h2.center {{ section }}
       .row(v-for="[rowLabel, rowDetails] of Object.entries(formConfig[section])")
         .row-label {{ rowLabel }}
-        label.checkbox.row-entry(v-if="typeof(rowDetails.default) =='boolean'")
-            input(type="checkbox" v-model="answers[rowLabel]")
-        input.input.is-small.row-entry(v-else v-model="answers[rowLabel]")
-    button.button.is-expanded.is-link(@click="gxo") FILL OUT FORM
-    button.button.is-expanded.is-warning(@click="buildPDF") Download
+
+        .control(v-if="typeof(rowDetails.default) =='boolean'")
+          label.checkbox.row-entry()
+              input(type="checkbox" v-model="answers[rowLabel]")
+        .control(v-else-if="rowDetails.multiline")
+          textarea.textarea.is-small.row-entry(
+            v-model="answers[rowLabel]" rows="2"
+          )
+        .control(v-else)
+          input.input.is-small.row-entry( v-model="answers[rowLabel]")
+
 
   .rightpanel
     canvas#png-image
+
+  .bottompanel
+    button.button.is-small.is-link(@click="buildPDF") Download PDF
+
 </template>
 
 <style scoped lang="scss">
+.main-app {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: 0 0;
+  padding: 0 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 450px 2fr;
+  gap: 0.25rem;
+}
 
-.panels {
-  display: flex;
+.top-panel {
+  // margin: 0 auto;
+  grid-column: 1 / 3;
+  padding: 2.5rem 2rem;
+}
+
+.leftpanel {
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  // overflow-y: auto;
+  padding: 1rem 1.5rem;
 }
 
 .rightpanel {
-  margin-left: 1rem;
-  flex: 1;
-  border: 1px solid #88c;
+  grid-row: 2 / 3;
+  grid-column: 2 / 3;
+  // padding: 1rem 1rem;
+  max-height: 100%;
+  position: relative;
+  // margin: 0rem 1rem 1rem 1rem;
+  // background-color: cyan;
+  overflow-y: auto;
+  margin: 0rem 1rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+
 }
 
+
 #png-image {
-  background-color: yellow;
-  width: 100%;
+  flex: 1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  max-width: 100%;
+  border: 1px solid #88c;
 }
 
 .row {
@@ -163,15 +251,21 @@ hr
 }
 
 .row-entry {
-  width: 150px;
+  width: 180px;
 }
+.xsection {
+  margin-bottom: 2rem;
+}
+
 .xsection h2 {
   grid-column: 1 / 3;
 }
 
 h2 {
   font-size: 1.8rem;
-  margin: 2rem 0 1rem 0;
+  margin: 0rem 0 1rem 0;
+  line-height: 2.1rem;
+
 }
 
 .right {
@@ -180,5 +274,13 @@ h2 {
 
 .center {
   text-align: center;
+}
+
+.bottompanel {
+  margin: 0 auto;
+}
+
+.button {
+  margin: 0.5rem 0.5rem;
 }
 </style>

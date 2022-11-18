@@ -1,69 +1,83 @@
 <template lang="pug">
 #app
-  .top-panel
+  .working(v-if="isWorking")
+    h1 creating pdf...
+  .top-panel(:class="{'is-working': isWorking}")
     h1.center {{ formConfig.title }}
 
-  .leftpanel
+  .leftpanel(:class="{'is-working': isWorking}")
     .xsection(v-for="section in sections")
       h2.center {{ section }}
-      .row(v-for="[rowLabel, rowDetails] of Object.entries(formConfig[section])")
-        .row-label {{ rowLabel }}
+      .row(v-for="[field, details] of sectionFields(section)")
+        .row-label {{ field }}
 
-        .control(v-if="typeof(rowDetails.default) =='boolean'")
+        .control(v-if="typeof(details.default) =='boolean'")
           label.checkbox.row-entry()
-              input(type="checkbox" v-model="answers[rowLabel]")
-        .control(v-else-if="rowDetails.multiline")
+              input(type="checkbox" v-model="answers[field]")
+        .control(v-else-if="details.multiline")
           textarea.textarea.is-small.row-entry(
-            v-model="answers[rowLabel]" rows="2"
+            v-model="answers[field]" rows="2"
           )
         .control(v-else)
-          input.input.is-small.row-entry( v-model="answers[rowLabel]")
+          input.input.is-small.row-entry( v-model="answers[field]")
 
-
-  .rightpanel
+  .rightpanel(:class="{'is-working': isWorking}")
     canvas#png-image
 
-  .bottompanel
-    button.button.is-small.is-link(@click="buildPDF") Download PDF
+  .bottompanel(:class="{'is-working': isWorking}")
+    button.button.is-small.is-link(:disabled="isWorking" @click="buildPDF") Download PDF
 </template>
 
 <script lang="ts">
+import { debounce } from 'lodash-es'
+import { nextTick } from 'vue'
+import { PDFDocument, PageSizes } from 'pdf-lib'
 import YAML from 'yaml'
-import { PDFDocument, PageSizes, StandardFonts, rgb } from 'pdf-lib'
-import Vue from 'vue'
 
 import config from '@/assets/genehmigung.yaml?raw'
 import pngImage from '@/assets/genehmigung.png'
 
 const PIXELRATIO = window.devicePixelRatio
-
 console.log({ PIXELRATIO })
+
+interface LocalData {
+  formConfig: any
+  answers: any
+  ctx: CanvasRenderingContext2D | null
+  dimensions: number[]
+  cleanImage: any
+  debouncedUpdateForm: any
+  isWorking: boolean
+}
 
 export default {
   name: 'App',
   components: {},
   data() {
     return {
-      formConfig: {} as any,
-      answers: {} as any,
-      ctx: null as any,
+      answers: {},
+      cleanImage: null,
+      ctx: null,
       dimensions: [0, 0],
-      cleanImage: null as any,
-    }
+      formConfig: {},
+      debouncedUpdateForm: {} as any,
+      isWorking: false,
+    } as LocalData
   },
   props: {},
   async mounted() {
     this.formConfig = await YAML.parse(config)
-    console.log(this.formConfig)
+    console.log({ config: this.formConfig })
 
     this.setInitialValues()
     this.insertImage()
-    this.updateForm()
+    // this.updateForm()
+    this.debouncedUpdateForm = debounce(this.updateForm, 200)
   },
   watch: {
     answers: {
       handler(newAnswers, oldAnswers) {
-        this.updateForm()
+        this.debouncedUpdateForm()
       },
       deep: true,
     },
@@ -75,6 +89,10 @@ export default {
     },
   },
   methods: {
+    sectionFields(section: string) {
+      const fields = Object.entries(this.formConfig[section]) as any[]
+      return fields
+    },
     setInitialValues() {
       const answers = {} as any
       for (const section of this.sections) {
@@ -84,34 +102,23 @@ export default {
       }
       console.log({ answers })
     },
-    async buildPDF() {
-      const byteData = this.ctx.canvas.toDataURL('image/png')
-
-      const pdfDoc = await PDFDocument.create()
-      const page = pdfDoc.addPage(PageSizes.A4)
-
-      const pngImage = await pdfDoc.embedPng(byteData)
-
-      page.drawImage(pngImage, {
-        x: 0,
-        y: 0,
-        width: page.getWidth(),
-        height: page.getHeight(),
-      })
-
-      // Serialize the PDFDocument to bytes (a Uint8Array)
-      const pdfBytes = await pdfDoc.save()
-
-      const blobURL = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }))
-
-      let element = document.createElement('a')
-      element.setAttribute('href', blobURL)
-      element.setAttribute('download', 'form.pdf')
-      element.style.display = 'none'
-
-      document.body.appendChild(element)
-      element.click()
-      document.body.removeChild(element)
+    insertImage() {
+      let canvas = document.getElementById('png-image') as HTMLCanvasElement
+      let image = new Image()
+      image.onload = () => {
+        console.log(71, { image })
+        this.cleanImage = image
+        this.ctx = canvas.getContext('2d')
+        canvas.width = image.width * PIXELRATIO
+        canvas.height = image.height * PIXELRATIO
+        this.dimensions = [canvas.width, canvas.height]
+        this.updateForm()
+      }
+      image.src = pngImage
+    },
+    redrawImage() {
+      this.ctx &&
+        this.ctx.drawImage(this.cleanImage, 0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
     },
     updateForm() {
       if (!this.ctx) return
@@ -154,42 +161,47 @@ export default {
             } else {
               const lines = (value as string).split('\n')
               lines.forEach((line, i) => {
-                this.ctx.fillText(line, x, y + (i * 3 * this.dimensions[1]) / 297.0)
+                this.ctx && this.ctx.fillText(line, x, y + (i * 3 * this.dimensions[1]) / 297.0)
               })
             }
           }
         }
       }
     },
-    insertImage() {
-      console.log(1)
-      let canvas = document.getElementById('png-image') as HTMLCanvasElement
-      console.log(2)
-      let image = new Image()
-      console.log(3)
-      image.onload = () => {
-        console.log(4)
-        this.cleanImage = image
-        console.log(5)
-        this.ctx = canvas.getContext('2d')
-        this.ctx.imageSmoothingQuality = 'low'
-        console.log(6)
-        canvas.width = image.width * PIXELRATIO
-        canvas.height = image.height * PIXELRATIO
-        console.log(7)
-        this.dimensions = [canvas.width, canvas.height]
-        // this.ctx.drawImage(image,0,0,canvas.width,canvas.height)
-        console.log(8)
-        this.updateForm()
-        console.log(9)
-      }
-      image.src = pngImage
-    },
-    redrawImage() {
-      // if (!this.ctx) return
-      console.log(10)
-      this.ctx.drawImage(this.cleanImage, 0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
-      console.log(11)
+    buildPDF() {
+      this.isWorking = true
+
+      setTimeout(async () => {
+        if (!this.ctx) return
+
+        const byteData = this.ctx.canvas.toDataURL('image/png')
+        const pdfDoc = await PDFDocument.create()
+        const page = pdfDoc.addPage(PageSizes.A4)
+
+        const pngImage = await pdfDoc.embedPng(byteData)
+
+        page.drawImage(pngImage, {
+          x: 0,
+          y: 0,
+          width: page.getWidth(),
+          height: page.getHeight(),
+        })
+
+        // Serialize the PDFDocument to bytes (a Uint8Array)
+        const pdfBytes = await pdfDoc.save()
+
+        const blobURL = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }))
+
+        let element = document.createElement('a')
+        element.setAttribute('href', blobURL)
+        element.setAttribute('download', this.formConfig.title + '.pdf')
+        element.style.display = 'none'
+
+        document.body.appendChild(element)
+        element.click()
+        document.body.removeChild(element)
+        this.isWorking = false
+      }, 100)
     },
   },
 }
@@ -201,31 +213,25 @@ export default {
 
 #app {
   display: grid;
-  color: var(--text);
-  margin: 0 0;
-  padding: 0 0;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  margin: 0 0;
-  padding: 0 0;
-  display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 450px 2fr;
   gap: 0.25rem;
+  margin: 0 0;
+  padding: 0 0;
+  color: var(--text);
+  width: 100%;
+}
+
+.is-working {
+  opacity: 0.7;
+  filter: blur(5px);
+  // filter: brightness(20%);
+  transition: opacity 0.1s ease-out;
 }
 
 .top-panel {
-  // margin: 0 auto;
   grid-column: 1 / 3;
+  grid-row: 1 / 2;
   padding: 2.5rem 2rem;
 }
 
@@ -235,18 +241,14 @@ export default {
   max-height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  // overflow-y: auto;
   padding: 1rem 1.5rem;
 }
 
 .rightpanel {
-  grid-row: 2 / 3;
   grid-column: 2 / 3;
-  // padding: 1rem 1rem;
+  grid-row: 2 / 3;
   max-height: 100%;
   position: relative;
-  // margin: 0rem 1rem 1rem 1rem;
-  // background-color: cyan;
   overflow-y: auto;
   margin: 0rem 1rem 1rem 1rem;
   display: flex;
@@ -260,7 +262,6 @@ export default {
   bottom: 0;
   max-width: 100%;
   border: 1px solid #88c;
-  background-color: white;
 }
 
 .row {
@@ -309,5 +310,16 @@ h2 {
 
 .button {
   margin: 0.5rem 0.5rem;
+}
+
+.working {
+  grid-row: 1/3;
+  grid-column: 1/3;
+  text-align: center;
+  margin: auto auto;
+  background-color: #ffc;
+  padding: 1rem 3rem;
+  border: 1px solid blue;
+  z-index: 1;
 }
 </style>

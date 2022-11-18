@@ -1,75 +1,75 @@
 title: Antrag auf Genehmigung einer Dienstreise
 image: genehmigung.png
 
-"An wen":
-  "An die Fakultätsverwaltung": { default: false, x: 12.5, y: 32.5}
-  "An die*den Präsident*in": { default: true, x: 12.5, y: 36.5}
+'An wen':
+  'An die Fakultätsverwaltung': { default: false, x: 12.5, y: 32.5 }
+  'An die*den Präsident*in': { default: true, x: 12.5, y: 36.5 }
 
-"I. Persönliche Angaben":
-  "Name, Vorname":        { x: 42, y: 55 }
-  "Personalnummer":       { x: 70, y: 62.5 }
-  "Fakultät / Abt.":      { x: 37, y: 68, default: 'V' }
-  "Telefon":              { x: 65, y: 68.5 }
-  "Sekr":                 { x: 24, y: 74.5, default: 'KAI 4-1'}
-  "E-mail":               { x: 53, y: 74.5 }
-  "Privatanschrift":      { x: 57, y: 81, multiline: true }
-  "Ich bin an der TU befristet": { x: 43, y: 88, default: false }
-  "Befristet bis zum":    { x: 43, y: 91.5 }
-  "Ich bin an der TU unbefristet": { x: 74.2, y: 88, default: false }
+'Persönliche Angaben':
+  'Name, Vorname': { x: 42, y: 54.5 }
+  'Personalnummer': { x: 70, y: 62.5 }
+  'Fakultät / Abt.': { x: 37, y: 68, default: 'V' }
+  'Telefon': { x: 65, y: 68.5 }
+  'Sekr': { x: 24, y: 74.5, default: 'KAI 4-1' }
+  'E-mail': { x: 53, y: 74.5 }
+  'Privatanschrift': { x: 57, y: 81, multiline: true }
+  'Ich bin an der TU befristet': { x: 43, y: 88, default: false }
+  'Befristet bis zum': { x: 43, y: 91.5 }
+  'Ich bin an der TU unbefristet': { x: 74.2, y: 88, default: false }
 
-"II. Voraussichtlich entstehende Kosten":
-  "Flug bzw. Fahrt": { x: 176, y: 54.75 }
-  "keine(1)": { x: 186, y: 54.75, default: false }
-  "Übernachtungskosten": { x: 176, y: 61.25 }
-  "keine(2)": { x: 186.5, y: 61.25, default: false }
-  "Tagungsgebühren": { x: 176, y: 67.5 }
-  "keine(3)": { x: 187, y: 67.5, default: false }
-  "Abzüglich ggf. Erstattung von Driten": { x: 176, y: 77.25 }
-  "keine(4)": { x: 187.5, y: 77.25, default: false }
-  "Summe": { x: 176, y: 86.5 }
+'Voraussichtlich entstehende Kosten':
+  'Flug bzw. Fahrt': { x: 176, y: 54.75 }
+  'keine(1)': { x: 186, y: 54.75, default: false }
+  'Übernachtungskosten': { x: 176, y: 61.25 }
+  'keine(2)': { x: 186.5, y: 61.25, default: false }
+  'Tagungsgebühren': { x: 176, y: 67.5 }
+  'keine(3)': { x: 187, y: 67.5, default: false }
+  'Abzüglich ggf. Erstattung von Driten': { x: 176, y: 77.25 }
+  'keine(4)': { x: 187.5, y: 77.25, default: false }
+  'Summe': { x: 176, y: 86.5 }
 
-"III. Angaben zum Reiseverlauf":
-  "Reisedauer vom":       { x: 42, y: 104 }
-  "bis zum":              { x: 86, y: 104 }
-  "Dienstgeschäft Beginn am": { x: 60, y: 110.5 }
-  "Beginn um":              { x: 90, y: 110.5 }
-  "Ende am":                { x: 124, y: 110.5 }
-  "Ende um":                { x: 157, y: 110.5 }
-  "Reiseziel Land":         { x: 40, y: 117 }
-  "Ort":                    { x: 90, y: 117 }
-  "Reisezweck":             { x: 90, y: 123 }
+'Angaben zum Reiseverlauf':
+  'Reisedauer vom': { x: 42, y: 104 }
+  'bis zum': { x: 86, y: 104 }
+  'Dienstgeschäft Beginn am': { x: 60, y: 110.5 }
+  'Beginn um': { x: 90, y: 110.5 }
+  'Ende am': { x: 124, y: 110.5 }
+  'Ende um': { x: 157, y: 110.5 }
+  'Reiseziel Land': { x: 40, y: 117 }
+  'Ort': { x: 90, y: 117 }
+  'Reisezweck': { x: 90, y: 123 }
 
-"IV. Beförderungsmittel":
-  "Bahn": { x: 15.75, y: 136, default: false }
-  "Flugzeug": { x: 32.75, y: 136, default: false }
-  "Schiff": { x: 54, y: 136, default: false }
-  "Mietwagen": { x: 69.5, y: 136, default: false }
-  "Diens-Pkw": { x: 92.75, y: 136, default: false }
-  "Privat-Pkw Kat I": { x: 15.75, y: 140, default: false }
-  "Privat-Pkw Kat II": { x: 15.75, y: 143, default: false }
-  "Begründung für Nutzung Pkw/Mietwagen": { x: 83, y: 149}
+'Beförderungsmittel':
+  'Bahn': { x: 15.75, y: 136, default: false }
+  'Flugzeug': { x: 32.75, y: 136, default: false }
+  'Schiff': { x: 54, y: 136, default: false }
+  'Mietwagen': { x: 69.5, y: 136, default: false }
+  'Diens-Pkw': { x: 92.75, y: 136, default: false }
+  'Privat-Pkw Kat I': { x: 15.75, y: 140, default: false }
+  'Privat-Pkw Kat II': { x: 15.75, y: 143, default: false }
+  'Begründung für Nutzung Pkw/Mietwagen': { x: 83, y: 149 }
 
-"V. Verbindung der Reise mit Urlaub":
-  "nein": { x: 15.75, y: 162, default: false }
-  "ja": { x: 26.5, y: 162, default: false }
-  "Aufenthaltsort": { x: 55, y: 162}
-  "vom": { x: 93, y: 162 }
-  "bis": { x: 130, y: 162 }
+'Verbindung der Reise mit Urlaub':
+  'nein': { x: 15.75, y: 162, default: false }
+  'ja': { x: 26.5, y: 162, default: false }
+  'Aufenthaltsort': { x: 55, y: 162 }
+  'vom': { x: 93, y: 162 }
+  'bis': { x: 130, y: 162 }
 
-"VI. Kostenerstattung":
-  "keine": { x: 15.75, y: 175.25, default: false }
-  "voll": { x: 28, y: 175.25, default: false }
-  "anteilig mit": { x: 37.5, y: 175.25, default: false }
-  "mit €": { x: 78, y: 175.25 }
-  "oder %": { x: 110, y: 175.25 }
-  "Reise wird vom Mittelgeber pauschal erstattet": { x: 15.75, y: 179, default: false }
-  "erstattet nein": { x: 87, y: 179, default: false }
-  "erstattet ja": { x: 100, y: 179, default: false }
-  "Mittelgeber":  { x: 128, y: 179}
-  "Kostenstelle": { x: 36, y: 185.2 }
-  "Fonds": { x: 76, y: 185.2}
-  "Sachkonto": { x: 128, y: 185.2}
-  "PSP-Element": { x: 36, y: 191.5}
-  "PSP-Sachkonto": { x: 115, y: 191.5}
-  "Abschlagszahlung ja": { x: 45, y: 198, default: false}
-  "Abschlagszahlung nein": { x: 59, y: 198, default: false}
+'Kostenerstattung':
+  'keine': { x: 15.75, y: 175.25, default: false }
+  'voll': { x: 28, y: 175.25, default: false }
+  'anteilig mit': { x: 37.5, y: 175.25, default: false }
+  'mit €': { x: 78, y: 175.25 }
+  'oder %': { x: 110, y: 175.25 }
+  'Reise wird vom Mittelgeber pauschal erstattet': { x: 15.75, y: 179, default: false }
+  'erstattet nein': { x: 87, y: 179, default: false }
+  'erstattet ja': { x: 100, y: 179, default: false }
+  'Mittelgeber': { x: 128, y: 179 }
+  'Kostenstelle': { x: 36, y: 185.2 }
+  'Fonds': { x: 76, y: 185.2 }
+  'Sachkonto': { x: 128, y: 185.2 }
+  'PSP-Element': { x: 36, y: 191.5 }
+  'PSP-Sachkonto': { x: 115, y: 191.5 }
+  'Abschlagszahlung ja': { x: 45, y: 198, default: false }
+  'Abschlagszahlung nein': { x: 59, y: 198, default: false }

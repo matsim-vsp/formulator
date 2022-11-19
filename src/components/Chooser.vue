@@ -63,11 +63,11 @@ export default {
   },
   methods: {
     async getAllForms() {
-      const filenames = await (await fetch('/forms.txt')).text()
+      const filenames = await (await fetch(BASE_URL + 'forms.txt')).text()
       filenames.split('\n').forEach(async config => {
         const filename = config.trim()
         if (filename) {
-          const raw = await (await fetch(`/_forms/${filename}`)).text()
+          const raw = await (await fetch(BASE_URL + `_forms/${filename}`)).text()
           const yaml = await YAML.parse(raw)
           const key = filename.slice(0, filename.lastIndexOf('.'))
           this.allForms[key] = yaml

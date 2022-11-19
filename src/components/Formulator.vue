@@ -34,7 +34,7 @@ import { debounce } from 'lodash-es'
 import { PDFDocument, PageSizes } from 'pdf-lib'
 import YAML from 'yaml'
 
-// const BASE_URL = import.meta.env.BASE_URL
+const BASE_URL = import.meta.env.BASE_URL
 const PIXELRATIO = window.devicePixelRatio
 
 interface LocalData {
@@ -67,7 +67,7 @@ export default {
     this.debouncedUpdateForm = debounce(this.updateForm, 200)
 
     const filename = this.$route.params.form + '.yaml'
-    const raw = await (await fetch(`/_forms/${filename}`)).text()
+    const raw = await (await fetch(BASE_URL + `_forms/${filename}`)).text()
     const yaml = await YAML.parse(raw)
     this.formConfig = yaml
 

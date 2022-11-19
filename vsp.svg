@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   sodipodi:docname="vsp-logo-2022-white-vehicles-cropped.svg"
+   sodipodi:docname="vsp-logo-2022.svg"
    inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
    id="svg8"
    version="1.1"
-   viewBox="0 0 25.65218 16.908012"
-   height="16.908012mm"
-   width="25.65218mm"
+   viewBox="0 0 64 64"
+   height="64"
+   width="64"
    inkscape:export-filename="C:\Users\billy\GDrive\tu-berlin\logo\vsp-logo-2022-600dpi.png"
    inkscape:export-xdpi="600.89856"
    inkscape:export-ydpi="600.89856"
@@ -33,8 +33,8 @@
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="37.276786"
-     inkscape:cx="51.071429"
+     inkscape:cy="527.63393"
+     inkscape:cx="389.55357"
      inkscape:zoom="11.2"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -42,11 +42,7 @@
      bordercolor="#666666"
      pagecolor="#ffffff"
      id="base"
-     inkscape:pagecheckerboard="0"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0" />
+     inkscape:pagecheckerboard="0" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -81,17 +77,16 @@
   <g
      id="layer1"
      inkscape:groupmode="layer"
-     inkscape:label="Layer 1"
-     transform="translate(-88.257662,-129.72903)">
+     inkscape:label="Layer 1">
     <path
        id="rect68-7"
        style="fill:#717171;fill-opacity:1;stroke-width:0.246129;stroke-miterlimit:4;stroke-dasharray:none"
-       d="m 333.57227,494.0957 v 60.12305 h 93.71484 V 542.32227 H 345.89258 V 494.0957 Z"
+       d="M 333.57227 494.0957 L 333.57227 554.21875 L 427.28711 554.21875 L 427.28711 542.32227 L 345.89258 542.32227 L 345.89258 494.0957 L 333.57227 494.0957 z "
        transform="scale(0.26458333)" />
     <path
        id="rect68"
        style="fill:#c50e1f;fill-opacity:1;stroke-width:0.224857;stroke-miterlimit:4;stroke-dasharray:none"
-       d="m 344.42773,490.31445 v 54.61719 h 86.09766 V 534.50781 H 355.5332 v -44.19336 z"
+       d="M 344.42773 490.31445 L 344.42773 544.93164 L 430.52539 544.93164 L 430.52539 534.50781 L 355.5332 534.50781 L 355.5332 490.31445 L 344.42773 490.31445 z "
        transform="scale(0.26458333)" />
     <g
        style="font-style:italic;font-variant:normal;font-weight:600;font-stretch:normal;font-size:47.5605px;line-height:1.25;font-family:'Avenir Next';-inkscape-font-specification:'Avenir Next, Semi-Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#c50e1f;fill-opacity:1;stroke:none;stroke-width:1.18901"

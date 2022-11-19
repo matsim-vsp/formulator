@@ -67,7 +67,7 @@ export default {
     this.debouncedUpdateForm = debounce(this.updateForm, 200)
 
     const filename = this.$route.params.form + '.yaml'
-    const raw = await (await fetch(BASE_URL + `_forms/${filename}`)).text()
+    const raw = await (await fetch(BASE_URL + `forms/${filename}`)).text()
     const yaml = await YAML.parse(raw)
     this.formConfig = yaml
 
@@ -115,7 +115,7 @@ export default {
         this.dimensions = [canvas.width, canvas.height]
         this.updateForm()
       }
-      image.src = `/_forms/${pngFilename}`
+      image.src = BASE_URL + `/forms/${pngFilename}`
     },
     redrawImage() {
       this.ctx &&

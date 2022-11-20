@@ -5,7 +5,7 @@
       h1 Select form:
       hr
       .form(v-for="filename in Object.keys(allForms)")
-        router-link(:to="`/form/${filename}`") {{ allForms[filename].title }}
+        router-link(:to="`/${allForms[filename].sheet ? 'sheet' : 'form'}/${filename}`") {{ allForms[filename].title }}
 
 </template>
 
@@ -37,7 +37,7 @@ export default {
       cleanImage: null,
       ctx: null,
       dimensions: [0, 0],
-      formConfig: {},
+      formConfig: {} as any,
       debouncedUpdateForm: {} as any,
       isWorking: false,
       allForms: {},

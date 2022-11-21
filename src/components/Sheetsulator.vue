@@ -111,6 +111,14 @@ export default {
       const csvURL = rootURL + '/gviz/tq?tqx=out:csv&sheet=table'
       const raw = await (await fetch(csvURL)).text()
       console.log(raw)
+
+      if (raw.startsWith('<!DOCTYPE')) {
+        alert(
+          'Cannot access this Google Sheet.\n\nTo grant access, you must go to Google Sheets first and click the "Share" button. Change the permissions from "Restricted" to "Anyone with the link" as viewer.'
+        )
+        return
+      }
+
       const csv = Papaparse.parse(raw, {
         header: false,
         dynamicTyping: false,

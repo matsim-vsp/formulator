@@ -67,7 +67,8 @@ export default {
   methods: {
     async getAllForms() {
       const filenames = await (await fetch(BASE_URL + 'forms.txt')).text()
-      filenames.split('\n').forEach(async config => {
+
+      for (const config of filenames.split('\n')) {
         const filename = config.trim()
         if (filename) {
           const raw = await (await fetch(BASE_URL + `forms/${filename}`)).text()
@@ -75,7 +76,7 @@ export default {
           const key = filename.slice(0, filename.lastIndexOf('.'))
           this.allForms[key] = yaml
         }
-      })
+      }
       console.log({ ALLFORMS: this.allForms })
     },
     imageURL(filename: string) {

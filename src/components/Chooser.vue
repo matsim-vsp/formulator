@@ -2,7 +2,8 @@
 .chooser
 
     .top-panel(v-if="!formConfig.title" :class="{'is-working': isWorking}")
-      h1 Select form:
+      h1 VSP Formulator
+      h2 Select form:
       hr
       .forms
         .form(v-for="filename in Object.keys(allForms)" :key="filename")

@@ -4,8 +4,11 @@
     .top-panel(v-if="!formConfig.title" :class="{'is-working': isWorking}")
       h1 Select form:
       hr
-      .form(v-for="filename in Object.keys(allForms)")
-        router-link(:to="`/${allForms[filename].sheet ? 'sheet' : 'form'}/${filename}`") {{ allForms[filename].title }}
+      .forms
+        .form(v-for="filename in Object.keys(allForms)" :key="filename")
+          .thumbnail(@click="openForm(filename)")
+            img(:src="imageURL(filename)")
+            p.chooser-link {{ allForms[filename].title }}
 
 </template>
 
@@ -75,6 +78,14 @@ export default {
       })
       console.log({ ALLFORMS: this.allForms })
     },
+    imageURL(filename: string) {
+      return BASE_URL + `forms/${this.allForms[filename].image}`
+    },
+    openForm(filename: string) {
+      const which = this.allForms[filename].sheet ? 'sheet' : 'form'
+      const url = `/${which}/${filename}`
+      this.$router.push(url)
+    },
   },
 }
 </script>
@@ -92,74 +103,15 @@ export default {
   padding: 0 0;
   color: var(--text);
   width: 100%;
-}
-
-.is-working {
-  opacity: 0.7;
-  filter: blur(5px);
-  // filter: brightness(20%);
-  transition: opacity 0.1s ease-out;
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
 .top-panel {
   grid-column: 1 / 3;
   grid-row: 1 / 2;
   padding: 2.5rem 2rem;
-}
-
-.leftpanel {
-  grid-row: 2 / 3;
-  grid-column: 1 / 2;
-  max-height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 1rem 1.5rem;
-}
-
-.rightpanel {
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
-  max-height: 100%;
-  position: relative;
-  overflow-y: auto;
-  margin: 0rem 1rem 1rem 1rem;
-  display: flex;
-  flex-direction: column;
-}
-
-#png-image {
-  flex: 1;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  max-width: 100%;
-  border: 1px solid #88c;
-}
-
-.row {
-  display: flex;
-  margin-right: auto;
-  margin-bottom: 0.5rem;
-  max-width: 400px;
-  font-size: 1rem;
-}
-
-.row-label {
-  flex: 1;
-  margin: auto 0.5rem auto 0;
-  text-align: right;
-  line-height: 1.1rem;
-}
-
-.row-entry {
-  width: 180px;
-}
-.xsection {
-  margin-bottom: 2rem;
-}
-
-.xsection h2 {
-  grid-column: 1 / 3;
 }
 
 h2 {
@@ -176,22 +128,32 @@ h2 {
   text-align: center;
 }
 
-.bottompanel {
-  margin: 0 auto;
+.chooser-link {
+  margin-top: auto;
+  background-color: white;
+  transition: background-color 0.1s;
+  padding: 8px 12px;
+  font-weight: bold;
+  line-height: 1.4rem;
 }
 
-.button {
-  margin: 0.5rem 0.5rem;
+.forms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 220px);
+  gap: 24px;
 }
 
-.working {
-  grid-row: 1/3;
-  grid-column: 1/3;
-  text-align: center;
-  margin: auto auto;
-  background-color: #ffc;
-  padding: 1rem 3rem;
-  border: 1px solid blue;
-  z-index: 1;
+.form {
+  background-color: white;
+  padding: 5px;
+}
+
+.form:hover {
+  filter: drop-shadow(0 0 16px #00000030);
+  cursor: pointer;
+}
+
+img {
+  border: 1px solid #22c56b;
 }
 </style>

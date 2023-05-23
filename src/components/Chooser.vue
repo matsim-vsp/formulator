@@ -1,25 +1,43 @@
 <template lang="pug">
 .chooser
+  .top-panel(v-if="!formConfig.title" :class="{'is-working': isWorking}")
+    h1 VSP Formulator
 
-    .top-panel(v-if="!formConfig.title" :class="{'is-working': isWorking}")
-      h1 VSP Formulator
-      h2 Select form:
-      hr
+    .new-section
+      h2 Start new form:
       .forms
         .form(v-for="filename in Object.keys(allForms)" :key="filename")
           .thumbnail(@click="openForm(filename)")
             img(:src="imageURL(filename)")
             p.chooser-link {{ allForms[filename].title }}
 
+    .new-section
+      h2 &nbsp;Saved forms:
+      .saved-forms
+        .saved-form(v-for="form in savedForms" :key="form.updated"
+          @click="openSavedForm(form)"
+        )
+          p.flex
+            b {{ new Date(form.updated).toDateString() }} {{ new Date(form.updated).toLocaleTimeString() }}
+            p {{ form.filename }}
+
+          button.button.is-small.is-danger.is-outlined(@click.stop="deleteForm(form.updated)") Delete
 </template>
 
 <script lang="ts">
 import YAML from 'yaml'
 
 const BASE_URL = import.meta.env.BASE_URL
-
 const PIXELRATIO = window.devicePixelRatio
+
 console.log({ PIXELRATIO })
+
+interface SavedForm {
+  formOrSheet: string
+  filename: string
+  content: any
+  updated: string
+}
 
 interface LocalData {
   formConfig: any | null
@@ -30,10 +48,11 @@ interface LocalData {
   debouncedUpdateForm: any
   isWorking: boolean
   allForms: { [filename: string]: any }
+  savedForms: SavedForm[]
 }
 
 export default {
-  name: 'App',
+  name: 'Chooser',
   components: {},
   data() {
     return {
@@ -45,11 +64,13 @@ export default {
       debouncedUpdateForm: {} as any,
       isWorking: false,
       allForms: {},
+      savedForms: [],
     } as LocalData
   },
   props: {},
   async mounted() {
     await this.getAllForms()
+    await this.getSavedForms()
   },
   watch: {
     answers: {
@@ -80,13 +101,34 @@ export default {
       }
       console.log({ ALLFORMS: this.allForms })
     },
+
+    async getSavedForms() {
+      const raw = localStorage.getItem('allSaved') || '[]'
+      const forms = JSON.parse(raw)
+      this.savedForms = forms
+    },
+
     imageURL(filename: string) {
       return BASE_URL + `forms/${this.allForms[filename].image}`
     },
+
     openForm(filename: string) {
       const which = this.allForms[filename].sheet ? 'sheet' : 'form'
       const url = `/${which}/${filename}`
       this.$router.push(url)
+    },
+
+    openSavedForm(form: SavedForm) {
+      console.log(JSON.stringify(form))
+      const url = `/${form.formOrSheet}/${form.filename}/${form.updated}`
+      this.$router.push(url)
+    },
+
+    deleteForm(updated: string) {
+      console.log('DELETE!!!', updated)
+      const remaining = this.savedForms.filter(f => f.updated !== updated)
+      this.savedForms = remaining
+      localStorage.setItem('allSaved', JSON.stringify(this.savedForms))
     },
   },
 }
@@ -113,7 +155,6 @@ export default {
 .top-panel {
   grid-column: 1 / 3;
   grid-row: 1 / 2;
-  padding: 2.5rem 2rem;
 }
 
 h2 {
@@ -157,5 +198,29 @@ h2 {
 
 img {
   border: 1px solid #22c56b;
+}
+
+.new-section {
+  margin: 1rem 0 2rem 0;
+}
+
+.saved-forms {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.saved-form {
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  border-radius: 4px;
+}
+
+.saved-form:hover {
+  background-color: white;
+}
+
+.flex {
+  flex: 1;
 }
 </style>

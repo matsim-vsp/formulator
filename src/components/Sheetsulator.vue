@@ -35,6 +35,7 @@
     canvas#png-image
 
   .bottompanel(:class="{'is-working': isWorking}")
+    button.button.is-small.is-warning(:disabled="isWorking" @click="saveDraft") Save as Draft
     button.button.is-small.is-link(:disabled="isWorking" @click="buildPDF") Download PDF
 </template>
 
@@ -188,12 +189,46 @@ export default {
       return fields
     },
     setInitialValues() {
+      // default values
       for (const section of this.sections) {
         for (const key in this.formConfig[section]) {
           this.answers[key] = this.formConfig[section][key].default || ''
         }
       }
+
+      // load from saved form
+      if (this.$route.params.savedForm) {
+        const raw = localStorage.getItem('' + this.$route.params.savedForm) || '{}'
+        const savedAnswers = JSON.parse(raw)
+        for (const key in savedAnswers) {
+          this.answers[key] = savedAnswers[key]
+        }
+      }
+
+      if (this.sheetURL) this.loadSheet()
     },
+
+    saveDraft() {
+      console.log('SAVE DRAFT', this.$route.params)
+
+      const item = {
+        formOrSheet: 'sheet',
+        filename: this.$route.params.sheet,
+        updated: Date.now(),
+      }
+
+      console.log(item)
+
+      const raw = localStorage.getItem('allSaved') ?? '[]'
+
+      const allSaved = JSON.parse(raw) as any[]
+      allSaved.unshift(item)
+
+      localStorage.setItem('allSaved', JSON.stringify(allSaved))
+      localStorage.setItem('' + item.updated, JSON.stringify(this.answers))
+      this.$router.back()
+    },
+
     insertImage() {
       const filename = this.$route.params.sheet as string
       const pngFilename = filename + '.png'

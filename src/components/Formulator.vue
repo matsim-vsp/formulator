@@ -26,10 +26,13 @@
     canvas#png-image
 
   .bottompanel(:class="{'is-working': isWorking}")
+    button.button.is-small.is-warning(:disabled="isWorking" @click="saveDraft") Save as Draft
     button.button.is-small.is-link(:disabled="isWorking" @click="buildPDF") Download PDF
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue'
+
 import { debounce } from 'lodash-es'
 import { PDFDocument, PageSizes } from 'pdf-lib'
 import YAML from 'yaml'
@@ -48,7 +51,7 @@ interface LocalData {
   formConfig: any
 }
 
-export default {
+export default defineComponent({
   name: 'App',
   components: {},
   data() {
@@ -94,12 +97,23 @@ export default {
       return fields
     },
     setInitialValues() {
+      // default values
       for (const section of this.sections) {
         for (const key in this.formConfig[section]) {
           this.answers[key] = this.formConfig[section][key].default || ''
         }
       }
+
+      // load from saved form
+      if (this.$route.params.savedForm) {
+        const raw = localStorage.getItem('' + this.$route.params.savedForm) || '{}'
+        const savedAnswers = JSON.parse(raw)
+        for (const key in savedAnswers) {
+          this.answers[key] = savedAnswers[key]
+        }
+      }
     },
+
     insertImage() {
       const filename = this.$route.params.form as string
       const pngFilename = filename + '.png'
@@ -169,6 +183,26 @@ export default {
         }
       }
     },
+
+    saveDraft() {
+      console.log('SAVE DRAFT', this.$route.params)
+
+      const item = {
+        formOrSheet: 'form',
+        filename: this.$route.params.form,
+        updated: Date.now(),
+      }
+
+      const raw = localStorage.getItem('allSaved') ?? '[]'
+
+      const allSaved = JSON.parse(raw) as any[]
+      allSaved.unshift(item)
+
+      localStorage.setItem('allSaved', JSON.stringify(allSaved))
+      localStorage.setItem('' + item.updated, JSON.stringify(this.answers))
+      this.$router.back()
+    },
+
     buildPDF() {
       this.isWorking = true
 
@@ -205,7 +239,7 @@ export default {
       }, 100)
     },
   },
-}
+})
 </script>
 
 <style lang="scss">

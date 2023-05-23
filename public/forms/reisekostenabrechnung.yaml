@@ -1,5 +1,6 @@
 title: Reisekostenabrechnung
 image: reisekostenabrechnung.png
+destinationField: nach
 
 'Details':
   'Abrechnung über die mit Genehmigung vom': { x: 80, y: 48 }

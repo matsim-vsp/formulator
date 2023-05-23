@@ -19,7 +19,7 @@
         )
           p.flex
             b {{ new Date(form.updated).toDateString() }} {{ new Date(form.updated).toLocaleTimeString() }}
-            p {{ form.filename }}
+            p {{ form.purpose || form.filename }}
 
           button.button.is-small.is-danger.is-outlined(@click.stop="deleteForm(form.updated)") Delete
 </template>
@@ -37,6 +37,7 @@ interface SavedForm {
   filename: string
   content: any
   updated: string
+  purpose?: string
 }
 
 interface LocalData {

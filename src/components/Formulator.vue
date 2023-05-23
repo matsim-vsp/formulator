@@ -87,7 +87,7 @@ export default defineComponent({
   },
   computed: {
     sections() {
-      const { title, image, ...sections } = this.formConfig
+      const { title, image, destinationField, ...sections } = this.formConfig
       return Object.keys(sections)
     },
   },
@@ -191,6 +191,9 @@ export default defineComponent({
         formOrSheet: 'form',
         filename: this.$route.params.form,
         updated: Date.now(),
+        purpose: `${
+          this.formConfig.destinationField ? this.answers[this.formConfig.destinationField] : ''
+        } — ${this.$route.params.form}`,
       }
 
       const raw = localStorage.getItem('allSaved') ?? '[]'

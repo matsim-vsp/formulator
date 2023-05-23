@@ -1,5 +1,6 @@
 title: Antrag auf Genehmigung einer Dienstreise
 image: genehmigung.png
+destinationField: Reisezweck
 
 'An wen':
   'An die Fakultätsverwaltung': { default: false, x: 12.5, y: 32.5 }

@@ -111,7 +111,6 @@ export default {
       const rootURL = this.sheetURL.slice(0, this.sheetURL.lastIndexOf('/'))
       const csvURL = rootURL + '/gviz/tq?tqx=out:csv&sheet=table'
       const raw = await (await fetch(csvURL)).text()
-      console.log(raw)
 
       if (raw.startsWith('<!DOCTYPE')) {
         alert(
@@ -124,7 +123,6 @@ export default {
         header: false,
         dynamicTyping: false,
       })
-      console.log(csv.data)
       this.populateSheet(csv.data)
     },
     populateSheet(csv: any[]) {
@@ -199,9 +197,11 @@ export default {
       // load from saved form
       if (this.$route.params.savedForm) {
         const raw = localStorage.getItem('' + this.$route.params.savedForm) || '{}'
-        const savedAnswers = JSON.parse(raw)
-        for (const key in savedAnswers) {
-          this.answers[key] = savedAnswers[key]
+        const details = JSON.parse(raw)
+        const { answers, sheetURL } = details
+        if (sheetURL) this.sheetURL = sheetURL
+        for (const key in answers) {
+          this.answers[key] = answers[key]
         }
       }
 
@@ -211,10 +211,15 @@ export default {
     saveDraft() {
       console.log('SAVE DRAFT', this.$route.params)
 
+      const purpose = `${this.entries[0]?.text || ''}/${this.entries[1]?.text || ''} - ${
+        this.entries[3]?.text || ''
+      }`
+
       const item = {
         formOrSheet: 'sheet',
         filename: this.$route.params.sheet,
         updated: Date.now(),
+        purpose,
       }
 
       console.log(item)
@@ -225,7 +230,12 @@ export default {
       allSaved.unshift(item)
 
       localStorage.setItem('allSaved', JSON.stringify(allSaved))
-      localStorage.setItem('' + item.updated, JSON.stringify(this.answers))
+
+      const details = {
+        sheetURL: this.sheetURL,
+        answers: this.answers,
+      }
+      localStorage.setItem('' + item.updated, JSON.stringify(details))
       this.$router.back()
     },
 

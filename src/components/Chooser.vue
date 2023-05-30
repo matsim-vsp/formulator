@@ -20,6 +20,7 @@
           p.flex
             b {{ new Date(form.updated).toDateString() }} {{ new Date(form.updated).toLocaleTimeString() }}
             p {{ form.purpose || form.filename }}
+              span.edit-button(@click.stop="editTitle(form)") ✎﹏
 
           button.button.is-small.is-danger.is-outlined(@click.stop="deleteForm(form.updated)") Delete
 </template>
@@ -121,7 +122,8 @@ export default {
 
     openSavedForm(form: SavedForm) {
       console.log(JSON.stringify(form))
-      const url = `/${form.formOrSheet}/${form.filename}/${form.updated}`
+      let url = `/${form.formOrSheet}/${form.filename}/${form.updated}`
+      if (form.purpose) url += `?purpose=${form.purpose}`
       this.$router.push(url)
     },
 
@@ -130,6 +132,13 @@ export default {
       const remaining = this.savedForms.filter(f => f.updated !== updated)
       this.savedForms = remaining
       localStorage.setItem('allSaved', JSON.stringify(this.savedForms))
+    },
+    editTitle(form: SavedForm) {
+      const newTitle = prompt('Enter name for this form', form.purpose || form.filename)
+      if (newTitle) {
+        form.purpose = newTitle
+        localStorage.setItem('allSaved', JSON.stringify(this.savedForms))
+      }
     },
   },
 }
@@ -221,9 +230,25 @@ img {
 
 .saved-form:hover {
   background-color: white;
+
+  .edit-button {
+    color: #666;
+  }
 }
 
 .flex {
   flex: 1;
+}
+
+.edit-button {
+  padding: 1px;
+  margin-left: 1rem;
+  color: white;
+}
+
+.edit-button:hover {
+  border: 1px solid #ccc;
+  background-color: #e5f2fa;
+  color: black;
 }
 </style>

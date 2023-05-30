@@ -49,6 +49,7 @@ interface LocalData {
   isWorking: boolean
   allForms: any[]
   formConfig: any
+  purpose: string
 }
 
 export default defineComponent({
@@ -63,6 +64,7 @@ export default defineComponent({
       debouncedUpdateForm: {} as any,
       isWorking: false,
       formConfig: {} as any,
+      purpose: '',
     } as LocalData
   },
   props: {},
@@ -73,6 +75,10 @@ export default defineComponent({
     const raw = await (await fetch(BASE_URL + `forms/${filename}`)).text()
     const yaml = await YAML.parse(raw)
     this.formConfig = yaml
+
+    if (this.$route.query?.purpose) {
+      this.purpose = '' + this.$route.query.purpose
+    }
 
     this.setInitialValues()
     this.insertImage()
@@ -191,9 +197,11 @@ export default defineComponent({
         formOrSheet: 'form',
         filename: this.$route.params.form,
         updated: Date.now(),
-        purpose: `${
-          this.formConfig.destinationField ? this.answers[this.formConfig.destinationField] : ''
-        } — ${this.$route.params.form}`,
+        purpose:
+          this.purpose ||
+          `${
+            this.formConfig.destinationField ? this.answers[this.formConfig.destinationField] : ''
+          } — ${this.$route.params.form}`,
       }
 
       const raw = localStorage.getItem('allSaved') ?? '[]'

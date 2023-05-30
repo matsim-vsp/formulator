@@ -58,6 +58,7 @@ interface LocalData {
   formConfig: any
   sheetURL: string
   entries: any[]
+  purpose: string
 }
 
 export default {
@@ -74,6 +75,7 @@ export default {
       formConfig: {} as any,
       sheetURL: '',
       entries: [],
+      purpose: '',
     } as LocalData
   },
   props: {},
@@ -84,6 +86,10 @@ export default {
     const raw = await (await fetch(BASE_URL + `forms/${filename}`)).text()
     const yaml = await YAML.parse(raw)
     this.formConfig = yaml
+
+    if (this.$route.query?.purpose) {
+      this.purpose = '' + this.$route.query.purpose
+    }
 
     this.setInitialValues()
     this.insertImage()
@@ -211,9 +217,11 @@ export default {
     saveDraft() {
       console.log('SAVE DRAFT', this.$route.params)
 
-      const purpose = `${this.entries[0]?.text || ''}/${this.entries[1]?.text || ''} - ${
-        this.entries[3]?.text || ''
-      }`
+      const purpose =
+        this.purpose ||
+        `${this.entries[0]?.text || ''}/${this.entries[1]?.text || ''} - ${
+          this.entries[3]?.text || ''
+        }`
 
       const item = {
         formOrSheet: 'sheet',

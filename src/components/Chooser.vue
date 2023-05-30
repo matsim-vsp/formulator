@@ -151,6 +151,8 @@ export default {
   position: absolute;
   left: 0;
   right: 0;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .top-panel {

@@ -276,7 +276,7 @@ export default {
 
       this.redrawImage()
 
-      const fontSize = (0.75 * this.dimensions[1]) / 100
+      const fontSize = (0.8 * this.dimensions[1]) / 100
       this.ctx.font = `bold ${fontSize}px Arial`
       this.ctx.fillStyle = '#008'
 

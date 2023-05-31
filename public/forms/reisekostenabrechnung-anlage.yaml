@@ -8,7 +8,7 @@ tables:
     lines: 24
     height: 5.68
     startXY: [13, 58]
-    offsetX: [0, 10, 17, 29, 104, 111, 133, 155, 170, 182]
+    offsetX: [0, 10, 17, 29, 106, 113, 133, 155, 170, 182]
 
   explanations:
     sheetDataStartsAtRow: 26

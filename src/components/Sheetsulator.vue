@@ -142,6 +142,9 @@ export default {
 
         // hard-code exceptions for now
         if (!row) break
+
+        if (row[4] && row[4].startsWith('Note: You must')) continue
+
         if (row[4] == 'Zusammen:') {
           section = 2
         }

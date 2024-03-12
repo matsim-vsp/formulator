@@ -115,7 +115,8 @@ export default {
   methods: {
     async loadSheet() {
       const rootURL = this.sheetURL.slice(0, this.sheetURL.lastIndexOf('/'))
-      const csvURL = rootURL + '/gviz/tq?tqx=out:csv&sheet=table'
+      // just
+      const csvURL = rootURL + '/gviz/tq?tqx=out:csv&range=A2:J27'
       const raw = await (await fetch(csvURL)).text()
 
       if (raw.startsWith('<!DOCTYPE')) {

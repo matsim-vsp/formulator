@@ -1,0 +1,65 @@
+title: Reisekostenabrechnung
+image: reisekostenabrechnung.png
+destinationField: nach
+
+'Details':
+  'Abrechnung über die mit Genehmigung vom': { x: 80, y: 48 }
+  'ausgeführte Dienstreise vom': { x: 56, y: 52 }
+  'bis': { x: 73, y: 52 }
+  'nach': { x: 95, y: 52 }
+  'Name, Vorname': { x: 35, y: 56 }
+  'Fakultät / Abt.': { default: 'V', x: 35, y: 60 }
+  'Sekretariat': { default: 'KAI 4-1', x: 88, y: 60 }
+  'Telefon': { x: 24, y: 67.5 }
+  'Email': { x: 90, y: 67.5 }
+  'Privatanschrift': { x: 60, y: 71.5 }
+  'Personalnummer': { x: 40, y: 75.5 }
+  'Eine Abschlagszahlung/ Pauschalerstattung bereits erhalten (Ja)':
+    { default: false, x: 10, y: 84.25 }
+  'in Höhe von €': { x: 43, y: 83.5 }
+  'Nein, nicht erhalten': { default: false, x: 58, y: 83.5 }
+
+'Weitere Wohnsitze':
+  'Weitere Wohnsitze: nein': { default: false, x: 9.5, y: 113 }
+  'Weitere Wohnsitze: ja': { default: false, x: 24, y: 113 }
+  'Weitere Wohnsitze: in': { x: 39, y: 112.5 }
+
+'Dienstreise mit Pkw':
+  'Privat-Pkw': { default: false, x: 7, y: 120.5 }
+  'Mietwagen': { default: false, x: 29, y: 120.5 }
+  'TU-Bus/Dienst-Fahrzeug': { default: false, x: 49, y: 120.5 }
+  'Mitfahrer*in im Pkw': { default: false, x: 7, y: 124 }
+  'Mitfahrer*in bei': { x: 45, y: 124 }
+
+'Unentgeltliche Unterkunft':
+  'wurde gestellt (ja)': { default: false, x: 81.5, y: 131 }
+  'nicht wurde gestellt (nein)': { default: false, x: 88.5, y: 131 }
+  'in der Tagungsgebühr (ja)': { default: false, x: 82, y: 135 }
+  'nicht in der Tagungsgebühr (nein)': { default: false, x: 89, y: 135 }
+  'Privat Übernachtung (ja)': { default: false, x: 83, y: 138 }
+  'Keine Privat Übernachtung (nein)': { default: false, x: 90, y: 138 }
+
+'Mahlzeiten / Unentgeltliche Verpflegung':
+  'Unentgeltliche Mahlzeiten erhalten (ja)': { default: false, x: 81, y: 145.5 }
+  'Unentgeltliche Mahlzeiten erhalten (nein)': { default: false, x: 88, y: 145.5 }
+  'Mahlzeit war in der Tagungsgebühr / Hotelrechnung (ja)': { default: false, x: 83, y: 149 }
+  'Mahlzeit war nicht in der Tagungsgebühr / Hotelrechnung (nein)':
+    { default: false, x: 90, y: 149 }
+  'Mahlzeit über 60 € erhalten (ja)': { default: false, x: 80, y: 156 }
+  'Nein, nicht über 60 € erhalten (nein)': { default: false, x: 87, y: 156 }
+  'im Flugzeug erhalten (ja)': { default: false, x: 81, y: 160 }
+  'nicht im Flugzeug erhalten (nein)': { default: false, x: 88, y: 160 }
+  'Durch TU als Bewirtungskosten übernommen (ja)': { default: false, x: 83, y: 163.5 }
+  'Nein, nicht durch TU als Bewirtungskosten (nein)': { default: false, x: 90, y: 163.5 }
+  'Frühstück': { x: 25, y: 170.5 }
+  'Mittagessen': { x: 62, y: 170.5 }
+  'Abendessen': { x: 100, y: 170.5 }
+
+'Bonusprogramm':
+  'Ja, und ich erkläre hiermit, ausschließlich dienstlich nutzen werde':
+    { default: false, x: 7, y: 180.75 }
+  'Nein': { default: false, x: 7, y: 185 }
+  'BahnCard: keine': { default: false, x: 7, y: 191.5 }
+  'BahnCard: 25': { default: false, x: 18.5, y: 191.5 }
+  'BahnCard: 50': { default: false, x: 32.25, y: 191.5 }
+  'BahnCard: 100': { default: false, x: 45.5, y: 191.5 }

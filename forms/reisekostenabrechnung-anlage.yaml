@@ -1,0 +1,30 @@
+title: Anlage zur Reisekostenabrechnung
+image: reisekostenabrechnung-anlage.png
+sheet: 1Ox5TYBfDbY_4eRKcHxlehIsAgOZoLP0M4PYjTF4mymU
+
+tables:
+  entries:
+    sheetDataStartsAtRow: 2
+    lines: 24
+    height: 5.68
+    startXY: [13, 58]
+    offsetX: [0, 10, 17, 29, 106, 113, 133, 155, 170, 182]
+
+  explanations:
+    sheetDataStartsAtRow: 26
+    lines: 5
+    height: 10
+    startXY: [10, 200]
+    offsetX: [0, 100, 120]
+
+'Details':
+  'Name, Vorname': { x: 110, y: 15 }
+  'Sekr': { x: 180, y: 15, default: 'KAI 4-1' }
+  'Jahr 20..': { x: 21, y: 33 }
+  'Notizen: Hotelkosten': { x: 14, y: 214, multiline: true, whiteout: true }
+  'Notizen: Beförderungsmittel': { x: 110, y: 214, multiline: true, whiteout: true }
+
+'Erklärung zu den angefallenen Nebenkosten':
+  'All Kosten sind dienstlich veranlasst': { x: 13.5, y: 244, default: false }
+  'Nebenkosten sind... ': { x: 109, y: 244, default: false }
+  'i.H.v. __ € sind dienstlich veranlasst': { x: 145, y: 244 }

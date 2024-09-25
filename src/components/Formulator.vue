@@ -26,7 +26,8 @@
     canvas#png-image
 
   .bottompanel(:class="{'is-working': isWorking}")
-    button.button.is-small.is-warning(:disabled="isWorking" @click="saveDraft") Save as Draft
+    button.button.is-small.is-warning(:disabled="isWorking" @click="saveDraft") Save Draft
+    button.button.is-small.is-success(:disabled="isWorking" @click="makeCopy") Make Copy
     button.button.is-small.is-link(:disabled="isWorking" @click="buildPDF") Download PDF
 </template>
 
@@ -206,6 +207,38 @@ export default defineComponent({
 
       const raw = localStorage.getItem('allSaved') ?? '[]'
 
+      let allSaved = JSON.parse(raw) as any[]
+      allSaved.unshift(item)
+
+      // filter out old one, if there is an old one
+      if (this.$route.params.savedForm) {
+        try {
+          const previousTimestamp = parseInt('' + this.$route.params.savedForm)
+          // console.log({ previousTimestamp })
+          allSaved = allSaved.filter(item => item.updated !== previousTimestamp)
+        } catch {}
+      }
+      localStorage.setItem('allSaved', JSON.stringify(allSaved))
+      localStorage.setItem('' + item.updated, JSON.stringify(this.answers))
+      this.$router.back()
+    },
+
+    makeCopy() {
+      console.log('MAKE COPY', this.$route.params)
+
+      const item = {
+        formOrSheet: 'form',
+        filename: this.$route.params.form,
+        updated: Date.now(),
+        purpose:
+          this.purpose ||
+          `${
+            this.formConfig.destinationField ? this.answers[this.formConfig.destinationField] : ''
+          } — ${this.$route.params.form}`,
+      }
+
+      const raw = localStorage.getItem('allSaved') ?? '[]'
+
       const allSaved = JSON.parse(raw) as any[]
       allSaved.unshift(item)
 
@@ -355,7 +388,7 @@ h2 {
 }
 
 .button {
-  margin: 0.5rem 0.5rem;
+  margin: 0.5rem 0.25rem !important;
 }
 
 .working {

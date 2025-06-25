@@ -4,7 +4,7 @@ sheet: 1Ox5TYBfDbY_4eRKcHxlehIsAgOZoLP0M4PYjTF4mymU
 
 tables:
   entries:
-    sheetDataStartsAtRow: 1
+    sheetDataStartsAtRow: 2
     lines: 24
     height: 5.68
     startXY: [13, 58]

@@ -116,7 +116,7 @@ export default {
     async loadSheet() {
       const rootURL = this.sheetURL.slice(0, this.sheetURL.lastIndexOf('/'))
       // just
-      const csvURL = rootURL + '/gviz/tq?tqx=out:csv&range=A2:J27'
+      const csvURL = rootURL + '/gviz/tq?tqx=out:csv&range=A'+ this.formConfig.tables.entries.sheetDataStartsAtRow + ':J27'
       const raw = await (await fetch(csvURL)).text()
 
       if (raw.startsWith('<!DOCTYPE')) {
@@ -139,7 +139,7 @@ export default {
 
       this.entries = []
       for (let i = 0; i < entryConfig.lines; i++) {
-        const row = csv[i + (entryConfig.sheetDataStartsAtRow - 1)] as any[]
+        const row = csv[i] as any[]
 
         // hard-code exceptions for now
         if (!row) break
